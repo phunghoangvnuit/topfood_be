@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS `topfood`;
+USE `topfood`;
+-- DROP DATABASE IF EXISTS `topfood`;
