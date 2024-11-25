@@ -5,7 +5,9 @@ import com.fpt.topfood_be.model.Order;
 import com.fpt.topfood_be.model.User;
 import com.fpt.topfood_be.request.AddCartItemRequest;
 import com.fpt.topfood_be.request.OrderRequest;
+import com.fpt.topfood_be.response.PaymentResponse;
 import com.fpt.topfood_be.service.OrderService;
+import com.fpt.topfood_be.service.PaymentService;
 import com.fpt.topfood_be.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,14 +24,18 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
     private UserService userService;
 
     @PostMapping("/order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest req,
-                                             @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest req,
+                                                       @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Order order = orderService.createOrder(req,user);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        PaymentResponse res = paymentService.createPaymentLink(order);
+        return new ResponseEntity<>(res, HttpStatus.OK);
 
     }
 
