@@ -85,7 +85,7 @@ public class OrderServiceImp implements OrderService{
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
         Order order = findOrderById(orderId);
-        if(orderStatus.equals("OUT_FOR_DELIVERY")
+        if(orderStatus.equals("DELIVERING")
                 || orderStatus.equals("DELIVERED")
                 || orderStatus.equals("COMPLETED")
                 || orderStatus.equals("PENDING")
