@@ -49,7 +49,7 @@ public class IngredientServiceImp implements IngredientsService{
 
     @Override
     public List<IngredientCategory> findIngredientCategoryByRestaurantId(Long id) throws Exception {
-        restaurantService.findRestaurantById(id);
+//        restaurantService.findRestaurantById(id);
         return ingredientCategoryRepository.findByRestaurantId(id);
     }
 
