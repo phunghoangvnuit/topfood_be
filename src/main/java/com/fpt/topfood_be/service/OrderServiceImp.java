@@ -55,6 +55,7 @@ public class OrderServiceImp implements OrderService{
         createdOrder.setOrderStatus("PENDING");
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
+        createdOrder.setDeliveryFee(order.getDeliveryFee());
 
         Cart cart = cartService.findCartByUserId(user.getId());
 
@@ -77,7 +78,6 @@ public class OrderServiceImp implements OrderService{
 
         Order savedOrder = orderRepository.save(createdOrder);
         restaurant.getOrders().add(savedOrder);
-
 
         return createdOrder;
     }
