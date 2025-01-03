@@ -82,15 +82,31 @@ public class OrderServiceImp implements OrderService{
         return createdOrder;
     }
 
+//    @Override
+//    public Order updateOrder(Long orderId, String orderStatus) throws Exception {
+//        Order order = findOrderById(orderId);
+//        if(orderStatus.equals("DELIVERING")
+//                || orderStatus.equals("DELIVERED")
+//                || orderStatus.equals("COMPLETED")
+//                || orderStatus.equals("PENDING")
+//        ){
+//            order.setOrderStatus(orderStatus);
+//            return orderRepository.save(order);
+//        }
+//        throw new Exception ("Please select a valid order status");
+//    }
+
     @Override
-    public Order updateOrder(Long orderId, String orderStatus) throws Exception {
+    public Order updateOrder(Long orderId) throws Exception {
         Order order = findOrderById(orderId);
-        if(orderStatus.equals("DELIVERING")
-                || orderStatus.equals("DELIVERED")
-                || orderStatus.equals("COMPLETED")
-                || orderStatus.equals("PENDING")
-        ){
-            order.setOrderStatus(orderStatus);
+        if(order.getOrderStatus().equals("PENDING"))
+        {
+            order.setOrderStatus("DELIVERING");
+            return orderRepository.save(order);
+        }
+        else if (order.getOrderStatus().equals("DELIVERING"))
+        {
+            order.setOrderStatus("COMPLETED");
             return orderRepository.save(order);
         }
         throw new Exception ("Please select a valid order status");
