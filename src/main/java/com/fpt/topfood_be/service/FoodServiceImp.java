@@ -94,9 +94,28 @@ public class FoodServiceImp implements FoodService{
         return foods.stream().filter(food -> food.isVegetarian() == isVegetarian).collect(Collectors.toList());
     }
 
+    private List<Food> filterByAvailable(List<Food> foods, boolean isAvailable) {
+        return foods.stream().filter(food -> food.isAvailable() == isAvailable).collect(Collectors.toList());
+    }
+
+    private List<Food> filterByNotAvailable(List<Food> foods) {
+        return foods.stream().filter(food -> !food.isAvailable()).collect(Collectors.toList());
+    }
+
     @Override
-    public List<Food> searchFood(String keyword) {
-        return foodRepository.searchFood(keyword);
+    public List<Food> searchFood(String keyword, Boolean isAvailable) {
+
+        List<Food> foods = foodRepository.searchFood(keyword);
+
+        if (isAvailable != null) {
+            if (isAvailable) {
+                foods = filterByAvailable(foods, isAvailable);
+            } else {
+                foods = filterByNotAvailable(foods);
+            }
+        }
+
+        return foods;
     }
 
     @Override

@@ -28,11 +28,13 @@ public class FoodController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<Food>> searchFood(@RequestParam String name,
+    public ResponseEntity<List<Food>> searchFood(
+        @RequestParam String name,
+        @RequestParam(required = false) Boolean isAvailable,
         @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Food> foods = foodService.searchFood(name);
+        List<Food> foods = foodService.searchFood(name,isAvailable);
 
         return new ResponseEntity<>(foods, HttpStatus.CREATED);
     }

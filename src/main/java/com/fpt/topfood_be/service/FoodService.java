@@ -20,7 +20,7 @@ public interface FoodService {
                                                                      String foodCategory
     );
 
-    public List<Food> searchFood(String keyword);
+    public List<Food> searchFood(String keyword, Boolean isAvailable);
     public Food findFoodById(Long foodId) throws Exception;
 
     public Food updateAvailabilityStatus(Long foodId) throws Exception;
