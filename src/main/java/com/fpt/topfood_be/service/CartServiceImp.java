@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -37,18 +38,21 @@ public class CartServiceImp implements CartService{
 
         Cart cart = cartRepository.findByCustomerId(user.getId());
 
+        CartItem newCartItem =  new CartItem();
+        newCartItem.setFood(food);
+        newCartItem.setIngredients(req.getIngredients());
+
+
         for(CartItem cartItem : cart.getItems()){
-            if(cartItem.getFood().equals(food)){
+            if(cartItem.getFood().equals(newCartItem.getFood()) &&
+                    new HashSet<>(cartItem.getIngredients()).equals(new HashSet<>(newCartItem.getIngredients()))){
                 int newQuantity = cartItem.getQuantity()+req.getQuantity();
                 return updateCartItemQuantity(cartItem.getId(), newQuantity);
             }
         }
 
-        CartItem newCartItem =  new CartItem();
-        newCartItem.setFood(food);
         newCartItem.setCart(cart);
         newCartItem.setQuantity(req.getQuantity());
-        newCartItem.setIngredients(req.getIngredients());
         newCartItem.setTotalPrice(req.getQuantity()*food.getPrice());
 
         CartItem savedCartItem = cartItemRepository.save(newCartItem);
