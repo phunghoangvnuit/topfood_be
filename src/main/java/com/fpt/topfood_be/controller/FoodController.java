@@ -29,12 +29,25 @@ public class FoodController {
 
     @GetMapping("/search")
     public ResponseEntity<List<Food>> searchFood(
-        @RequestParam String name,
+        @RequestParam String keyword,
         @RequestParam(required = false) Boolean isAvailable,
         @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 
-        List<Food> foods = foodService.searchFood(name,isAvailable);
+        List<Food> foods = foodService.searchFood(keyword,isAvailable);
+
+        return new ResponseEntity<>(foods, HttpStatus.CREATED);
+    }
+
+    @GetMapping("restaurant/{restaurantId}/search")
+    public ResponseEntity<List<Food>> searchFoodByRestaurant(
+            @RequestParam String keyword,
+            @RequestParam(required = false) Boolean isAvailable,
+            @PathVariable Long restaurantId,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+
+        List<Food> foods = foodService.searchFoodByRestaurant(restaurantId, keyword, isAvailable);
 
         return new ResponseEntity<>(foods, HttpStatus.CREATED);
     }

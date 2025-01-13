@@ -21,6 +21,9 @@ public interface FoodService {
     );
 
     public List<Food> searchFood(String keyword, Boolean isAvailable);
+
+    public List<Food> searchFoodByRestaurant(Long restaurantId, String keyword, Boolean isAvailable);
+
     public Food findFoodById(Long foodId) throws Exception;
 
     public Food updateAvailabilityStatus(Long foodId) throws Exception;

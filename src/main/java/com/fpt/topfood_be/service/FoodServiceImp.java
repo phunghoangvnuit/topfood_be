@@ -119,6 +119,22 @@ public class FoodServiceImp implements FoodService{
     }
 
     @Override
+    public List<Food> searchFoodByRestaurant(Long restaurantId, String keyword, Boolean isAvailable) {
+
+        List<Food> foods = foodRepository.searchFoodByRestaurant(restaurantId, keyword);
+
+        if (isAvailable != null) {
+            if (isAvailable) {
+                foods = filterByAvailable(foods, isAvailable);
+            } else {
+                foods = filterByNotAvailable(foods);
+            }
+        }
+
+        return foods;
+    }
+
+    @Override
     public Food findFoodById(Long foodId) throws Exception {
         Optional<Food> optionalFood = foodRepository.findById(foodId);
 
