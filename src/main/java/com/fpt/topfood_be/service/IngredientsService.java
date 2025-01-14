@@ -13,7 +13,7 @@ public interface IngredientsService {
 
     public List<IngredientCategory> findIngredientCategoryByRestaurantId(Long id) throws Exception;
 
-    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId) throws Exception;
+    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long price, Long categoryId) throws Exception;
 
     public List<IngredientsItem> findRestaurantsIngredients(Long restaurantId);
 

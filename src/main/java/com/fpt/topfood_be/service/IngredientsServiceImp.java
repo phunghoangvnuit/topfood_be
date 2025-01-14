@@ -54,12 +54,13 @@ public class IngredientsServiceImp implements IngredientsService{
     }
 
     @Override
-    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId) throws Exception {
+    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long ingredientPrice, Long categoryId) throws Exception {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         IngredientCategory category = findIngredientCategoryById(categoryId);
 
         IngredientsItem item = new IngredientsItem();
         item.setName(ingredientName);
+        item.setPrice(ingredientPrice);
         item.setRestaurant(restaurant);
         item.setCategory(category);
 

@@ -99,15 +99,19 @@ public class OrderServiceImp implements OrderService{
     @Override
     public Order updateOrder(Long orderId) throws Exception {
         Order order = findOrderById(orderId);
-        if(order.getOrderStatus().equals("PENDING"))
-        {
-            order.setOrderStatus("DELIVERING");
-            return orderRepository.save(order);
-        }
-        else if (order.getOrderStatus().equals("DELIVERING"))
-        {
-            order.setOrderStatus("COMPLETED");
-            return orderRepository.save(order);
+        switch (order.getOrderStatus()) {
+            case "PENDING" -> {
+                order.setOrderStatus("CONFIRMED");
+                return orderRepository.save(order);
+            }
+            case "CONFIRMED" -> {
+                order.setOrderStatus("DELIVERING");
+                return orderRepository.save(order);
+            }
+            case "DELIVERING" -> {
+                order.setOrderStatus("COMPLETED");
+                return orderRepository.save(order);
+            }
         }
         throw new Exception ("Please select a valid order status");
     }
