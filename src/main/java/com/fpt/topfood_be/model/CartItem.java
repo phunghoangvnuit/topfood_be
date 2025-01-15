@@ -27,7 +27,13 @@ public class CartItem {
 
     private int quantity;
 
-    private List<String> ingredients;
+    @ManyToMany
+    @JoinTable(
+            name = "cart_item_ingredient",
+            joinColumns = @JoinColumn(name = "cart_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_item_id")
+    )
+    private List<IngredientsItem> ingredients;
 
     private Long totalPrice;
 }

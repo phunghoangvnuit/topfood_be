@@ -1,5 +1,7 @@
 package com.fpt.topfood_be.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +25,7 @@ public class OrderItem {
 
     private Long totalPrice;
 
-    private List<String> ingredients;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItemIngredient> ingredients;
 }

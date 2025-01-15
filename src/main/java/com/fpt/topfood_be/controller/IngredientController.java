@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/ingredients")
+@RequestMapping("/api")
 public class IngredientController {
 
     @Autowired
     private IngredientsService ingredientsService;
 
-    @PostMapping("/category")
+    @PostMapping("/admin/ingredients/category")
     public ResponseEntity<IngredientCategory> createIngredientCategory(
             @RequestBody IngredientCategoryRequest req
             ) throws Exception {
@@ -27,7 +27,7 @@ public class IngredientController {
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
-    @PostMapping()
+    @PostMapping("/admin/ingredients")
     public ResponseEntity<IngredientsItem> createIngredientItem(
             @RequestBody IngredientRequest req
     ) throws Exception {
@@ -35,7 +35,7 @@ public class IngredientController {
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/stock")
+    @PutMapping("/admin/ingredients/{id}/stock")
     public ResponseEntity<IngredientsItem> updateIngredientStock(
             @PathVariable Long id
     ) throws Exception {
@@ -43,7 +43,7 @@ public class IngredientController {
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
-    @GetMapping("/restaurant/{id}")
+    @GetMapping("/admin/ingredients/restaurant/{id}")
     public ResponseEntity<List<IngredientsItem>> getRestaurantIngredient(
             @PathVariable Long id
     ) throws Exception {
@@ -51,11 +51,27 @@ public class IngredientController {
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
-    @GetMapping("/restaurant/{id}/category")
+    @GetMapping("/admin/ingredients/restaurant/{id}/category")
     public ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(
             @PathVariable Long id
     ) throws Exception {
         List<IngredientCategory> items = ingredientsService.findIngredientCategoryByRestaurantId(id);
+        return new ResponseEntity<>(items, HttpStatus.OK);
+    }
+
+    @GetMapping("/ingredients/food/{foodId}/categories")
+    public ResponseEntity<List<IngredientCategory>> getIngredientCategoriesByFoodId(
+            @PathVariable Long foodId
+    ) throws Exception {
+        List<IngredientCategory> categories = ingredientsService.getIngredientCategoriesByFoodId(foodId);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    @GetMapping("/ingredients/category/{categoryId}")
+    public ResponseEntity<List<IngredientsItem>> getIngredientsByCategoryId(
+            @PathVariable Long categoryId
+    ) throws Exception {
+        List<IngredientsItem> items = ingredientsService.getIngredientsByCategoryId(categoryId);
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 }

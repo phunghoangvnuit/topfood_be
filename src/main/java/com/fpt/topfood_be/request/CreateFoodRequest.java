@@ -1,6 +1,7 @@
 package com.fpt.topfood_be.request;
 
 import com.fpt.topfood_be.model.Category;
+import com.fpt.topfood_be.model.IngredientCategory;
 import com.fpt.topfood_be.model.IngredientsItem;
 import lombok.Data;
 
@@ -19,5 +20,5 @@ public class CreateFoodRequest {
     private Long restaurantId;
     private boolean vegetarian;
     private boolean seasonal;
-    private List<IngredientsItem> ingredients;
+    private List<IngredientCategory> ingredientCategories;
 }

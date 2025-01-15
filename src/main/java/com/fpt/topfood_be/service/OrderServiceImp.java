@@ -64,7 +64,7 @@ public class OrderServiceImp implements OrderService{
         for(CartItem cartItem : cart.getItems()){
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
-            orderItem.setIngredients(cartItem.getIngredients());
+            orderItem.setIngredients(mapIngredients(cartItem.getIngredients(), orderItem));
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
 
@@ -80,6 +80,16 @@ public class OrderServiceImp implements OrderService{
         restaurant.getOrders().add(savedOrder);
 
         return createdOrder;
+    }
+
+    private List<OrderItemIngredient> mapIngredients(List<IngredientsItem> ingredients, OrderItem orderItem) {
+        return ingredients.stream().map(ingredient -> {
+            OrderItemIngredient orderItemIngredient = new OrderItemIngredient();
+            orderItemIngredient.setIngredientsItem(ingredient);
+            orderItemIngredient.setOrderItem(orderItem);
+            orderItemIngredient.setCurrentPrice(ingredient.getPrice());
+            return orderItemIngredient;
+        }).collect(Collectors.toList());
     }
 
 //    @Override

@@ -1,8 +1,10 @@
 package com.fpt.topfood_be.service;
 
+import com.fpt.topfood_be.model.Food;
 import com.fpt.topfood_be.model.IngredientCategory;
 import com.fpt.topfood_be.model.IngredientsItem;
 import com.fpt.topfood_be.model.Restaurant;
+import com.fpt.topfood_be.repository.FoodRepository;
 import com.fpt.topfood_be.repository.IngredientCategoryRepository;
 import com.fpt.topfood_be.repository.IngredientItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import java.util.Optional;
 
 @Service
 public class IngredientsServiceImp implements IngredientsService{
+
+    @Autowired
+    private FoodRepository foodRepository;
 
     @Autowired
     private IngredientItemRepository ingredientItemRepository;
@@ -84,5 +89,17 @@ public class IngredientsServiceImp implements IngredientsService{
         IngredientsItem ingredientsItem = optionalIngredientsItem.get();
         ingredientsItem.setInStock(!ingredientsItem.isInStock());
         return ingredientItemRepository.save(ingredientsItem);
+    }
+
+    @Override
+    public List<IngredientCategory> getIngredientCategoriesByFoodId(Long foodId) throws Exception {
+        Food food = foodRepository.findById(foodId)
+                .orElseThrow(() -> new Exception("Food not found with id: " + foodId));
+        return food.getIngredientCategories();
+    }
+
+    @Override
+    public List<IngredientsItem> getIngredientsByCategoryId(Long categoryId) throws Exception {
+        return ingredientItemRepository.findByCategoryId(categoryId);
     }
 }

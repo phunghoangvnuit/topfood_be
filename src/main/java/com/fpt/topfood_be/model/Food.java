@@ -39,7 +39,15 @@ public class Food {
     private boolean isSeasonal;
 
     @ManyToMany
-    private List<IngredientsItem> ingredients = new ArrayList<>();
+    @JoinTable(
+            name = "food_ingredient_category",
+            joinColumns = @JoinColumn(name = "food_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_category_id")
+    )
+    private List<IngredientCategory> ingredientCategories = new ArrayList<>();
+
+//    @ManyToMany
+//    private List<IngredientsItem> ingredients = new ArrayList<>();
 
     private Date creationDate;
 

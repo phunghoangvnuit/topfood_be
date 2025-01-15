@@ -19,5 +19,7 @@ public interface IngredientsService {
 
     public IngredientsItem updateStock(Long id) throws Exception;
 
+    public List<IngredientCategory> getIngredientCategoriesByFoodId(Long foodId) throws Exception;
 
+    List<IngredientsItem> getIngredientsByCategoryId(Long categoryId) throws Exception;
 }

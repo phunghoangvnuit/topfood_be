@@ -1,9 +1,6 @@
 package com.fpt.topfood_be.service;
 
-import com.fpt.topfood_be.model.Cart;
-import com.fpt.topfood_be.model.CartItem;
-import com.fpt.topfood_be.model.Food;
-import com.fpt.topfood_be.model.User;
+import com.fpt.topfood_be.model.*;
 import com.fpt.topfood_be.repository.CartItemRepository;
 import com.fpt.topfood_be.repository.CartRepository;
 import com.fpt.topfood_be.repository.FoodRepository;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImp implements CartService{
@@ -43,17 +41,26 @@ public class CartServiceImp implements CartService{
         newCartItem.setIngredients(req.getIngredients());
 
 
-        for(CartItem cartItem : cart.getItems()){
-            if(cartItem.getFood().equals(newCartItem.getFood()) &&
-                    new HashSet<>(cartItem.getIngredients()).equals(new HashSet<>(newCartItem.getIngredients()))){
-                int newQuantity = cartItem.getQuantity()+req.getQuantity();
+        for (CartItem cartItem : cart.getItems()) {
+            if (cartItem.getFood().equals(newCartItem.getFood()) &&
+                    cartItem.getIngredients().stream().map(IngredientsItem::getId).collect(Collectors.toSet())
+                            .equals(newCartItem.getIngredients().stream().map(IngredientsItem::getId).collect(Collectors.toSet()))) {
+                int newQuantity = cartItem.getQuantity() + req.getQuantity();
                 return updateCartItemQuantity(cartItem.getId(), newQuantity);
             }
         }
 
         newCartItem.setCart(cart);
         newCartItem.setQuantity(req.getQuantity());
-        newCartItem.setTotalPrice(req.getQuantity()*food.getPrice());
+
+        // Calculate the total price of the ingredients
+        Long ingredientsTotalPrice = 0L;
+        for (IngredientsItem ingredient : req.getIngredients()) {
+            ingredientsTotalPrice += ingredient.getPrice();
+        }
+
+        // Set the total price of the cart item
+        newCartItem.setTotalPrice(req.getQuantity() * (food.getPrice() + ingredientsTotalPrice));
 
         CartItem savedCartItem = cartItemRepository.save(newCartItem);
 
@@ -73,7 +80,7 @@ public class CartServiceImp implements CartService{
 
         // 5*100 = 500
 
-        item.setTotalPrice(item.getFood().getPrice()*quantity);
+        item.setTotalPrice((item.getFood().getPrice() + item.getIngredients().stream().mapToLong(IngredientsItem::getPrice).sum()) * quantity);
 
         return cartItemRepository.save(item);
     }
@@ -103,7 +110,10 @@ public class CartServiceImp implements CartService{
         Long total = 0L;
 
         for(CartItem cartItem : cart.getItems()){
-            total+=cartItem.getFood().getPrice()*cartItem.getQuantity();
+            Long ingredientsTotalPrice = cartItem.getIngredients().stream()
+                    .mapToLong(IngredientsItem::getPrice)
+                    .sum();
+            total += (cartItem.getFood().getPrice() + ingredientsTotalPrice) * cartItem.getQuantity();
         }
         return total;
     }
