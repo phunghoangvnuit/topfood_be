@@ -47,4 +47,17 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
 
     }
+
+    // Ghi chú bởi: Phùng Hoàng
+    // Chỗ này để ở đây là để đổi trạng thái khi người dùng thanh toán xong
+    // được navigate về trang Payment Success thì gọi tới để đổi trạng thái
+    // (mang tính minh họa chứ thực tế không làm thế này)
+    @PutMapping("/order/{id}/payment")
+    public ResponseEntity<Order> updatePaymentStatus(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Order order = orderService.updatePaymentStatus(id);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
 }

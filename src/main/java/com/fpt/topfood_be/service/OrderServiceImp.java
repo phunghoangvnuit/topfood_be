@@ -6,7 +6,6 @@ import com.fpt.topfood_be.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +38,6 @@ public class OrderServiceImp implements OrderService{
     public Order createOrder(OrderRequest order, User user) throws Exception {
 
         Address shippingAddress = order.getDeliveryAddress();
-
         Address savedAddress = addressRepository.save(shippingAddress);
 
         if(!user.getAddresses().contains(savedAddress)){
@@ -48,19 +46,18 @@ public class OrderServiceImp implements OrderService{
         }
 
         Restaurant restaurant = restaurantService.findRestaurantById(order.getRestaurantId());
-
         Order createdOrder = new Order();
         createdOrder.setCustomer(user);
-        createdOrder.setCreatedAt(new Date());
-        createdOrder.setOrderStatus("PENDING");
-        createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
+        createdOrder.setOrderStatus("PENDING");
+        createdOrder.setReceiverName(order.getReceiverName());
+        createdOrder.setReceiverMobile(order.getReceiverMobile());
+        createdOrder.setDeliveryAddress(savedAddress);
+        createdOrder.setDeliveryAt(order.getDeliveryAt());
         createdOrder.setDeliveryFee(order.getDeliveryFee());
 
         Cart cart = cartService.findCartByUserId(user.getId());
-
         List<OrderItem> orderItems = new ArrayList<>();
-
         for(CartItem cartItem : cart.getItems()){
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
@@ -75,6 +72,8 @@ public class OrderServiceImp implements OrderService{
 
         createdOrder.setItems(orderItems);
         createdOrder.setTotalPrice(totalPrice);
+        createdOrder.setPaymentStatus(order.getPaymentStatus());
+        createdOrder.setCreatedAt(new Date());
 
         Order savedOrder = orderRepository.save(createdOrder);
         restaurant.getOrders().add(savedOrder);
@@ -157,5 +156,12 @@ public class OrderServiceImp implements OrderService{
             throw new Exception("order not found");
         }
         return optionalOrder.get();
+    }
+
+    @Override
+    public Order updatePaymentStatus(Long orderId) throws Exception {
+        Order order = findOrderById(orderId);
+        order.setPaymentStatus("PAID");
+        return orderRepository.save(order);
     }
 }

@@ -55,6 +55,7 @@ public class AuthController {
         }
 
         User createdUser = new User();
+        createdUser.setMobile(user.getMobile());
         createdUser.setEmail(user.getEmail());
         createdUser.setFullName(user.getFullName());
         createdUser.setRole(user.getRole());
