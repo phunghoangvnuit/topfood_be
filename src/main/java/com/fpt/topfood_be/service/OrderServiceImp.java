@@ -110,10 +110,10 @@ public class OrderServiceImp implements OrderService{
         Order order = findOrderById(orderId);
         switch (order.getOrderStatus()) {
             case "PENDING" -> {
-                order.setOrderStatus("CONFIRMED");
+                order.setOrderStatus("PREPARING");
                 return orderRepository.save(order);
             }
-            case "CONFIRMED" -> {
+            case "PREPARING" -> {
                 order.setOrderStatus("DELIVERING");
                 return orderRepository.save(order);
             }
@@ -163,5 +163,10 @@ public class OrderServiceImp implements OrderService{
         Order order = findOrderById(orderId);
         order.setPaymentStatus("PAID");
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> searchOrder(Long restaurantId, String keyword, String orderStatus) {
+        return orderRepository.searchOrdersByRestaurantIdAndKeywordAndStatus(restaurantId, keyword, orderStatus);
     }
 }

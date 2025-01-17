@@ -21,4 +21,6 @@ public interface OrderService {
     public Order findOrderById (Long orderId) throws Exception;
 
     public Order updatePaymentStatus(Long orderId) throws Exception;
+
+    public List<Order> searchOrder(Long restaurantId, String keyword, String orderStatus);
 }
