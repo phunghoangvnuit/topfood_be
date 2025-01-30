@@ -23,6 +23,8 @@ public class Food {
     private String description;
     private Long price;
 
+    private Long discountedPrice;
+
     @ManyToOne
     private Category foodCategory;
 

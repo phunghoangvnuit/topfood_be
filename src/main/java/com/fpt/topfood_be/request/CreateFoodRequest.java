@@ -13,6 +13,7 @@ public class CreateFoodRequest {
     private String name;
     private String description;
     private Long price;
+    private Long discountedPrice;
 
     private Category category;
     private List<String> images;
