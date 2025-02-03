@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    public List<Order> findByCustomerId(Long userId);
+    public List<Order> findByCustomerIdOrderByCreatedAtDesc(Long userId);
 
-    public List<Order> findByRestaurantId(Long restaurantId);
+    public List<Order> findByRestaurantIdOrderByCreatedAtDesc(Long restaurantId);
 
-    @Query("SELECT o FROM Order o WHERE o.restaurant.id = :restaurantId AND (o.customer.fullName LIKE %:keyword% OR o.customer.mobile LIKE %:keyword%) AND (:status IS NULL OR :status = '' OR o.orderStatus = :status)")
+    @Query("SELECT o FROM Order o WHERE o.restaurant.id = :restaurantId AND (o.customer.fullName LIKE %:keyword% OR o.customer.mobile LIKE %:keyword%) AND (:status IS NULL OR :status = '' OR o.orderStatus = :status) ORDER BY o.createdAt DESC")
     List<Order> searchOrdersByRestaurantIdAndKeywordAndStatus(@Param("restaurantId") Long restaurantId, @Param("keyword") String keyword, @Param("status") String status);
 }

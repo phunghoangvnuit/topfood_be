@@ -135,12 +135,12 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public List<Order> getUsersOrder(Long userId) throws Exception {
-        return orderRepository.findByCustomerId(userId);
+        return orderRepository.findByCustomerIdOrderByCreatedAtDesc(userId);
     }
 
     @Override
     public List<Order> getRestaurantsOrder(Long restaurantId, String orderStatus) throws Exception {
-        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+        List<Order> orders = orderRepository.findByRestaurantIdOrderByCreatedAtDesc(restaurantId);
         if(orderStatus!=null){
             orders = orders.stream().filter(order->
                     order.getOrderStatus().equals(orderStatus)).collect(Collectors.toList());
