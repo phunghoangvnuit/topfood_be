@@ -2,6 +2,7 @@ package com.fpt.topfood_be.service;
 
 import com.fpt.topfood_be.model.*;
 import com.fpt.topfood_be.repository.*;
+import com.fpt.topfood_be.request.CancelOrderRequest;
 import com.fpt.topfood_be.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,7 @@ public class OrderServiceImp implements OrderService{
         Order order = findOrderById(orderId);
         switch (order.getOrderStatus()) {
             case "PENDING" -> {
+                order.setApprovedAt(new Date());
                 order.setOrderStatus("PREPARING");
                 return orderRepository.save(order);
             }
@@ -118,6 +120,7 @@ public class OrderServiceImp implements OrderService{
                 return orderRepository.save(order);
             }
             case "DELIVERING" -> {
+                order.setDeliveryAt(new Date());
                 order.setOrderStatus("COMPLETED");
                 return orderRepository.save(order);
             }
@@ -163,6 +166,37 @@ public class OrderServiceImp implements OrderService{
         Order order = findOrderById(orderId);
         order.setPaymentStatus("PAID");
         return orderRepository.save(order);
+    }
+
+    @Override
+    public Order cancelOrderByUser(CancelOrderRequest req) throws Exception {
+        Order order = findOrderById(req.getId());
+        switch (order.getOrderStatus()) {
+            case "PENDING" -> {
+                if (order.getPaymentStatus().equals("PAID")){
+                    order.setOrderStatus("REFUNDING");
+                } else {
+                    order.setOrderStatus("CANCEL");
+                }
+                order.setNote(req.getReason());
+                return orderRepository.save(order);
+            }
+            case "PREPARING" -> {
+                if ((new Date().getTime() - order.getApprovedAt().getTime() < 5 * 60 * 1000) && order.getPaymentStatus().equals("PAID")) {
+                    order.setOrderStatus("REFUNDING");
+                } else {
+                    order.setOrderStatus("CANCEL");
+                }
+                order.setNote(req.getReason());
+                return orderRepository.save(order);
+            }
+            case "DELIVERING" -> {
+                order.setOrderStatus("CANCEL");
+                order.setNote(req.getReason());
+                return orderRepository.save(order);
+            }
+        }
+        throw new Exception ("Please select a valid order status");
     }
 
     @Override

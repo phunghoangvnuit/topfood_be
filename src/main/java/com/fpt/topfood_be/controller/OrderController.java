@@ -4,6 +4,7 @@ import com.fpt.topfood_be.model.CartItem;
 import com.fpt.topfood_be.model.Order;
 import com.fpt.topfood_be.model.User;
 import com.fpt.topfood_be.request.AddCartItemRequest;
+import com.fpt.topfood_be.request.CancelOrderRequest;
 import com.fpt.topfood_be.request.OrderRequest;
 import com.fpt.topfood_be.response.PaymentResponse;
 import com.fpt.topfood_be.service.OrderService;
@@ -58,6 +59,15 @@ public class OrderController {
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Order order = orderService.updatePaymentStatus(id);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PutMapping("/order/{id}/cancel")
+    public ResponseEntity<Order> cancelOrderByUser(
+            @RequestBody CancelOrderRequest req,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Order order = orderService.cancelOrderByUser(req);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 

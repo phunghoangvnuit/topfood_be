@@ -60,6 +60,9 @@ public class Order {
     // Sau khi đã thanh toán xong thì Payment Status là "PAID"
     private String paymentStatus;
 
+    private Date approvedAt;
+
     private Date createdAt;
 
+    private String note;
 }
