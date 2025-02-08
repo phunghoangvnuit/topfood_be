@@ -62,7 +62,7 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @PutMapping("/order/{id}/cancel")
+    @PutMapping("/order/cancel")
     public ResponseEntity<Order> cancelOrderByUser(
             @RequestBody CancelOrderRequest req,
             @RequestHeader("Authorization") String jwt) throws Exception {
